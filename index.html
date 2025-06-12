@@ -1,116 +1,115 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CALCULATOR</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <title>Minimal Glow Calculator</title>
     <style>
         body {
-            height: 100vh;
-            width: 100vw;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            background-color: rgb(11,26,51);
-        }
-
-        .outer {
+            background: #111;
             display: grid;
-            grid-template-columns: repeat(4, minmax(50px, 80px));
-            grid-template-rows: repeat(5, minmax(50px, 80px));
-            gap: 6px;
-            background-color: black;
-            width: fit-content;
-            /*to adjust the width of container same as contents inside*/
-        }
-
-        .display {
-            width: 335px;
-            height: 80px;
-            background-color: antiquewhite;
-            border: 4px solid black;
-            border-radius: 6px;
+            place-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #0ff;
+            font-family: Arial;
         }
         
-        /* to avoid disturbance of below containers due to animations */
-        #typed-output {
-            display: inline-block;
-            width: 300px;
-          
-            height: 40px;
-            overflow: hidden;
-            text-align: center;
-
+        .calculator {
+            background: #222;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px #0ff;
+        }
+        
+        .display {
+            background: #333;
+            padding: 10px;
+            margin-bottom: 15px;
+            text-align: right;
+            font-size: 24px;
+            border-radius: 5px;
+        }
+        
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        
+        button {
+            background: #333;
+            color: #0ff;
+            border: none;
+            padding: 15px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background: #444;
+            box-shadow: 0 0 10px #0ff;
+        }
+        
+        .equals {
+            background: #006;
         }
     </style>
 </head>
-
 <body>
-    <span id="typed-output" style="color:cyan;font-size: 30px;font-weight: 30px;" class="mb-3"></span>
-    <div class="display mb-2">
-        <h4></h4>
-    </div>
-    <div class="outer">
-        <button class="btn btn-primary">AC</button>
-        <button class="btn btn-primary">DEL</button>
-        <button class="btn btn-primary">SQRT</button>
-        <button class="btn btn-primary">/</button>
-        <button class="btn btn-primary">1</button>
-        <button class="btn btn-primary">2</button>
-        <button class="btn btn-primary">3</button>
-        <button class="btn btn-primary">*</button>
-        <button class="btn btn-primary">4</button>
-        <button class="btn btn-primary">5</button>
-        <button class="btn btn-primary">6</button>
-        <button class="btn btn-primary">-</button>
-        <button class="btn btn-primary">7</button>
-        <button class="btn btn-primary">8</button>
-        <button class="btn btn-primary">9</button>
-        <button class="btn btn-primary">+</button>
-        <button class="btn btn-primary">%</button>
-        <button class="btn btn-primary">0</button>
-        <button class="btn btn-primary">.</button>
-        <button class="btn btn-primary">=</button>
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        <div class="buttons">
+            <button onclick="clearDisplay()">C</button>
+            <button onclick="appendToDisplay('/')">/</button>
+            <button onclick="appendToDisplay('*')">*</button>
+            <button onclick="backspace()">⌫</button>
+            <button onclick="appendToDisplay('7')">7</button>
+            <button onclick="appendToDisplay('8')">8</button>
+            <button onclick="appendToDisplay('9')">9</button>
+            <button onclick="appendToDisplay('-')">-</button>
+            <button onclick="appendToDisplay('4')">4</button>
+            <button onclick="appendToDisplay('5')">5</button>
+            <button onclick="appendToDisplay('6')">6</button>
+            <button onclick="appendToDisplay('+')">+</button>
+            <button onclick="appendToDisplay('1')">1</button>
+            <button onclick="appendToDisplay('2')">2</button>
+            <button onclick="appendToDisplay('3')">3</button>
+            <button class="equals" onclick="calculate()">=</button>
+            <button onclick="appendToDisplay('0')">0</button>
+            <button onclick="appendToDisplay('.')">.</button>
+        </div>
     </div>
 
     <script>
-        var typed = new Typed("#typed-output", {
-            strings: ["HII", "THIS IS A","SIMPLE CALCULATOR", "DONE BY","INDRA MOULI"],
-            typeSpeed: 50,  // Speed of typing (milliseconds)
-            backSpeed: 25,  // Speed of deleting (milliseconds)
-            loop: true      // Keep repeating the text
-        });
-        let p = document.querySelector("h4");
-        let btns = document.querySelectorAll("button");
-        btns.forEach((btn) => {
-            btn.addEventListener("click", (event) => {
-                event.preventDefault();
-                console.log(event.target);
-                console.log(event.target.innerText);
-                let x = event.target.innerText
-                if (x === "=") {
-                    p.innerHTML = eval(p.innerHTML);
-                }
-                else if (x === "AC") {
-                    p.innerHTML = "";
-                }
-                else if (x == "SQRT") {
-                    p.innerHTML = Math.sqrt(eval(p.innerHTML));
-                }
-                else if (x === "DEL") {
-                    p.innerHTML = p.innerHTML.slice(0, -1);                  //slice(start,stop (excluded)).  slice(0,-n) removes last n character. slice(-2) returns last two elements
-                }
-                else {
-                    p.innerHTML += x;
-                }
-            })
-        })
+        let display = document.getElementById('display');
+        
+        function appendToDisplay(value) {
+            if (display.textContent === '0') {
+                display.textContent = value;
+            } else {
+                display.textContent += value;
+            }
+        }
+        
+        function clearDisplay() {
+            display.textContent = '0';
+        }
+        
+        function backspace() {
+            if (display.textContent.length === 1) {
+                display.textContent = '0';
+            } else {
+                display.textContent = display.textContent.slice(0, -1);
+            }
+        }
+        
+        function calculate() {
+            try {
+                display.textContent = eval(display.textContent);
+            } catch {
+                display.textContent = 'Error';
+            }
+        }
     </script>
 </body>
-
 </html>
